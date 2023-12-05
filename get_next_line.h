@@ -1,5 +1,9 @@
+
 #ifndef FT_GET_NEXT_LINE_H
 # define FT_GET_NEXT_LINE_H
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 1
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <fcntl.h>

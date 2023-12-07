@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H 
 # include <stdlib.h>
 # include <stdio.h>
 # include <fcntl.h>
@@ -19,7 +19,7 @@
 # include <sys/uio.h>
 # include <unistd.h>
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
 # endif
 
 void	*ft_calloc(size_t count, size_t size);

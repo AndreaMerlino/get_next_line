@@ -45,13 +45,15 @@ char	*temp(char **contenitore, char **buffer, int a)
 	return (temp);
 }
 
-char *subline(char ***c, char **nextline)
+char	*subline(char ***c)
 {
-		nextline = ft_calloc(ft_strlen(**c) + 1, 1);
-		ft_strlcpy(*nextline, **c, ft_strlen(**c) + 1);
-		free (**c);
-		**c = NULL;
-		return (*nextline);
+	char	*nextline;
+
+	nextline = ft_calloc(ft_strlen(**c) + 1, 1);
+	ft_strlcpy(nextline, **c, ft_strlen(**c) + 1);
+	free (**c);
+	**c = NULL;
+	return (nextline);
 }
 
 char	*line(char **c, char **t, int a)
@@ -73,22 +75,13 @@ char	*line(char **c, char **t, int a)
 		return (nextline);
 	}
 	else if (a == 0 && **c != '\0')
-	 {
+	{
 		free (*t);
-		nextline = subline(&c, &nextline);
+		nextline = subline(&c);
 		return (nextline);
-	}/*{
-		free (*t);
-		nextline = ft_calloc(ft_strlen(*c) + 1, 1);
-		ft_strlcpy(nextline, *c, ft_strlen(*c) + 1);
-		free (*c);
-		*c = NULL;
-		return (nextline);
-	}*/
+	}
 	return (nextline);
 }
-
-
 
 char	*get_next_line(int fd)
 {
@@ -105,7 +98,10 @@ char	*get_next_line(int fd)
 		buffer = ft_calloc(BUFFER_SIZE, 1);
 		a = read (fd, buffer, BUFFER_SIZE);
 		if (a == -1)
+		{
+			free(buffer);
 			return (NULL);
+		}
 		if (temporaneo != NULL)
 			free (temporaneo);
 		temporaneo = temp(&contenitore, &buffer, a);
@@ -116,5 +112,6 @@ char	*get_next_line(int fd)
 		if (nextline != NULL)
 			return (nextline);
 	}
+
 	return (NULL);
 }

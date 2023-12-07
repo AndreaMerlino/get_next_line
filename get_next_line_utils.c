@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/06 10:59:35 by andreamerli       #+#    #+#             */
+/*   Updated: 2023/12/06 11:01:46 by andreamerli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-int newline(char *s)
+int	newline(char *s)
 {
 	int	i;
 
@@ -13,6 +25,7 @@ int newline(char *s)
 	}
 	return (-1);
 }
+
 int	ft_strlen(const char *s)
 {
 	int	i;
@@ -22,11 +35,12 @@ int	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
+
 char	*ft_substr(char *s, int start, int len)
 {
-	 char	*new;
-	int	i;
-	int	finish;
+	char	*new;
+	int		i;
+	int		finish;
 
 	i = 0;
 	if (!s)
@@ -48,16 +62,13 @@ char	*ft_substr(char *s, int start, int len)
 	return (new);
 }
 
-char  *ft_strlcpy(char *dst,  char *src, int dstsize)
+char	*ft_strlcpy(char *dst, char *src, int dstsize)
 {
 	char	*s;
-	int	i;
-
-
+	int		i;
 
 	i = 0;
 	s = (char *)src;
-
 	while ((i < dstsize - 1) && (*s != '\0'))
 	{
 		*dst++ = *s++;
@@ -67,17 +78,13 @@ char  *ft_strlcpy(char *dst,  char *src, int dstsize)
 	return (s - i);
 }
 
-char 	*ft_strlcat(char *dst,  char *src, int dstsize)
+char	*ft_strlcat(char *dst, char *src, int dstsize)
 {
 	int	lendst;
 
-
 	if (!dst && !src)
 		return (0);
-
-
 	lendst = ft_strlen(dst);
 	dst = ft_strlcpy((dst + lendst), src, (dstsize));
 	return (dst - lendst);
 }
-

@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/06 10:51:06 by andreamerli       #+#    #+#             */
+/*   Updated: 2023/12/06 20:52:33 by andreamerli      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "get_next_line.h"
 
@@ -34,35 +45,50 @@ char	*temp(char **contenitore, char **buffer, int a)
 	return (temp);
 }
 
-char	*line(char **contenitore, char **temporaneo, int a)
+char *subline(char ***c, char **nextline)
+{
+		nextline = ft_calloc(ft_strlen(**c) + 1, 1);
+		ft_strlcpy(*nextline, **c, ft_strlen(**c) + 1);
+		free (**c);
+		**c = NULL;
+		return (*nextline);
+}
+
+char	*line(char **c, char **t, int a)
 {
 	int		b;
 	char	*nextline;
 
 	nextline = NULL;
-	b = newline(*contenitore);
-		if (b != -1)
-		{
-			nextline = ft_calloc(b + 2, 1);
-			ft_strlcpy(nextline, *contenitore, b + 1);
-			nextline[b] = '\n';
-			nextline[b + 1] = '\0';
-			free (*contenitore);
-			*contenitore = ft_substr(*temporaneo, b + 1, ft_strlen(*temporaneo) - b);
-			free (*temporaneo);
-			return (nextline);
-		}
-		else if (a == 0 && **contenitore != '\0')
-		{
-			free (*temporaneo);
-			nextline = ft_calloc(ft_strlen(*contenitore) + 1, 1);
-			ft_strlcpy(nextline, *contenitore, ft_strlen(*contenitore) +1 );
-			free (*contenitore);
-			*contenitore = NULL;
-			return(nextline);
-		}
+	b = newline(*c);
+	if (b != -1)
+	{
+		nextline = ft_calloc(b + 2, 1);
+		ft_strlcpy(nextline, *c, b + 1);
+		nextline[b] = '\n';
+		nextline[b + 1] = '\0';
+		free (*c);
+		*c = ft_substr(*t, b + 1, ft_strlen(*t) - b);
+		free (*t);
 		return (nextline);
+	}
+	else if (a == 0 && **c != '\0')
+	 {
+		free (*t);
+		nextline = subline(&c, &nextline);
+		return (nextline);
+	}/*{
+		free (*t);
+		nextline = ft_calloc(ft_strlen(*c) + 1, 1);
+		ft_strlcpy(nextline, *c, ft_strlen(*c) + 1);
+		free (*c);
+		*c = NULL;
+		return (nextline);
+	}*/
+	return (nextline);
 }
+
+
 
 char	*get_next_line(int fd)
 {
@@ -74,21 +100,21 @@ char	*get_next_line(int fd)
 
 	temporaneo = NULL;
 	a = 1;
-	while(a != 0)
+	while (a != 0)
 	{
-		buffer = ft_calloc(BUFFER_SIZE , 1);
+		buffer = ft_calloc(BUFFER_SIZE, 1);
 		a = read (fd, buffer, BUFFER_SIZE);
 		if (a == -1)
-		return(NULL);
+			return (NULL);
 		if (temporaneo != NULL)
 			free (temporaneo);
 		temporaneo = temp(&contenitore, &buffer, a);
-		contenitore  = ft_calloc(ft_strlen(temporaneo) + 1, 1);
-		 ft_strlcpy(contenitore, temporaneo, ft_strlen(temporaneo ) + 1);
-		 free (buffer);
-		 nextline = line(&contenitore, &temporaneo, a);
-		 if (nextline != NULL)
-		 return(nextline);
+		contenitore = ft_calloc(ft_strlen(temporaneo) + 1, 1);
+		ft_strlcpy(contenitore, temporaneo, ft_strlen(temporaneo) + 1);
+		free (buffer);
+		nextline = line(&contenitore, &temporaneo, a);
+		if (nextline != NULL)
+			return (nextline);
 	}
-		return(NULL);
+	return (NULL);
 }

@@ -8,19 +8,27 @@ int main ()
 {
 	char *pippo;
 
-	int fd = open("gnlTester/files/nl",  O_RDONLY);
+	int fd = open("gnlTester/files/42_no_nl",  O_RDONLY);
 
 pippo = get_next_line( fd);
 printf(">%s", pippo);
 
-// pippo = get_next_line( fd);
-// printf("\n%s", pippo);
-// pippo = get_next_line( fd);
-// printf("\n%s", pippo);
-// pippo = get_next_line( fd);
-// printf("\n%s", pippo);
-// pippo = get_next_line( fd);
-// printf("\n%s", pippo);
-// pippo = get_next_line( fd);
-// printf("\n%s", pippo);
+pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+  pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
+ pippo = get_next_line( fd);
+ printf("\n%s", pippo);
 }

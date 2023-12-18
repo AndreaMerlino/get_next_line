@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: andreamerlino <andreamerlino@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 10:51:06 by andreamerli       #+#    #+#             */
-/*   Updated: 2023/12/14 14:26:59 by andreamerli      ###   ########.fr       */
+/*   Updated: 2023/12/15 16:41:04 by andreamerli      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,73 +26,67 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-char	*temp(char **contenitore, char **buffer, int a)
+char	*temp(char **contenitore, char **buffer, int a, int fd)
 {
 	char	*temp;
 
-	if (*contenitore)
+	temp = NULL;
+	if (contenitore[fd])
 	{
-		temp = ft_calloc(ft_strlen(*contenitore) + a + 1, 1);
-		ft_strlcpy(temp, *contenitore, ft_strlen(*contenitore) + 1);
+		temp = ft_calloc(ft_strlen(contenitore[fd]) + a + 1, 1);
+		ft_strlcpy(temp, contenitore[fd], ft_strlen(contenitore[fd]) + 1);
 		ft_strlcat(temp, *buffer, a + 1);
-		free (*contenitore);
+		free (contenitore[fd]);
 	}
 	else
 	{
 		temp = ft_calloc(a + 1, 1);
 		ft_strlcpy(temp, *buffer, a + 1);
 	}
-	*contenitore = ft_calloc(ft_strlen(temp) + 1, 1);
-	ft_strlcpy(*contenitore, temp, ft_strlen(temp) + 1);
+	contenitore[fd] = ft_calloc(ft_strlen(temp) + 1, 1);
+	ft_strlcpy(contenitore[fd], temp, ft_strlen(temp) + 1);
 	free (*buffer);
 	return (temp);
 }
 
-char	*subline(char ***c, char ***t, char ***nextline, int b)
-{
-	if (b != -1)
-	{
-		**nextline = ft_calloc(b + 2, 1);
-		ft_strlcpy(**nextline, **c, b + 1);
-		(**nextline)[b] = '\n';
-		(**nextline)[b +1] = '\0';
-		free (**c);
-		**c = ft_substr(**t, b + 1, ft_strlen(**t) - b);
-		free (**t);
-		return (**nextline);
-	}
-	**nextline = ft_calloc(ft_strlen(**c) + 1, 1);
-	ft_strlcpy(**nextline, **c, ft_strlen(**c) + 1);
-	free (**c);
-	**c = NULL;
-	return (**nextline);
-}
-
-char	*line(char **c, char **t, char **nextline, int a)
+char	*subline(char **c, char **t, char **nextline, int fd)
 {
 	int		b;
 
-	b = newline(*c);
+	b = newline(c[fd]);
 	if (b != -1)
 	{
-		*nextline = subline(&c, &t, &nextline, b);
+		*nextline = ft_calloc(b + 2, 1);
+		ft_strlcpy(*nextline, c[fd], b + 1);
+		(*nextline)[b] = '\n';
+		(*nextline)[b +1] = '\0';
+		free (c[fd]);
+		c[fd] = ft_substr(*t, b + 1, ft_strlen(*t) - b);
+		free (*t);
 		return (*nextline);
 	}
-	else if (a == 0 && **c != '\0')
+	return (NULL);
+}
+
+char	*line(char **c, char **t, char **nextline, int a, int fd)
+{
+	if (a == 0 && *c[fd] != '\0')
 	{
-		free (*t);
-		*nextline = subline(&c, &t, &nextline, b);
-		return (*nextline);
+	*nextline = ft_calloc(ft_strlen(c[fd]) + 1, 1);
+	ft_strlcpy(*nextline, c[fd], ft_strlen(c[fd]) + 1);
+	free (c[fd]);
+	c[fd] = NULL;
+	return (*nextline);
 	}
 	if (*t != NULL)
 	{
 		free(*t);
 		*t = NULL;
 	}
-	if (a == 0 && **c == '\0')
+	if (a == 0 && *c[fd] == '\0')
 	{
-		free (*c);
-		*c = NULL;
+		free (c[fd]);
+		c[fd] = NULL;
 	}
 	return (NULL);
 }
@@ -101,7 +95,7 @@ char	*get_next_line(int fd)
 {
 	int			a;
 	char		*buffer;
-	static char	*contenitore;
+	static char	*contenitore[4096];
 	char		*nextline;
 	char		*temporaneo;
 
@@ -118,8 +112,11 @@ char	*get_next_line(int fd)
 		}
 		if (temporaneo != NULL)
 			free (temporaneo);
-		temporaneo = temp(&contenitore, &buffer, a);
-		nextline = line(&contenitore, &temporaneo, &nextline, a);
+		temporaneo = temp(&contenitore[fd], &buffer, a, fd);
+		nextline = subline(&contenitore[fd], &temporaneo, &nextline, fd);
+		if (nextline != NULL)
+			return (nextline);
+		nextline = line(&contenitore[fd], &temporaneo, &nextline, a, fd);
 		if (nextline != NULL)
 			return (nextline);
 	}
